@@ -27,7 +27,6 @@ export class MailingService {
 
   // Load email template from a file
   loadTemplate(templateName: string): string {
-    console.log(__dirname);
     const filePath = path.join(
       __dirname,
       '..',
@@ -63,7 +62,6 @@ export class MailingService {
       to: recipient,
       subject,
       html,
-      // You can add attachments here if needed
       attachments: mail.attachments ?? [],
     };
 

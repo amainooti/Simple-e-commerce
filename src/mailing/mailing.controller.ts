@@ -9,8 +9,8 @@ export class MailingController {
   @Post('/send-email')
   async sendMail(@Body() body: Record<string, string>) {
     const mail: sendMail = {
-      from: { name: 'Lucy', address: 'lucy@example.com' },
-      recipient: [{ name: 'cetpower', address: 'cetpower@example.com' }],
+      from: { name: 'cetpower', address: 'cetpower@mail.power.com' },
+      recipient: [{ name: 'Amaino Oti', address: 'amainooti@egmail.com' }],
       subject: 'Welcome aboard',
       templateName: 'welcome', // Use a template file called welcome.html
       placeholderReplacement: body,
