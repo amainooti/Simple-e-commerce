@@ -31,6 +31,8 @@ model Product {
   price       Float
   userId      Int
   cartItems   CartItem[]
+
+  @@map("product")
 }
 
 model Cart {
@@ -47,4 +49,6 @@ model CartItem {
   cart      Cart    @relation(fields: [cartId], references: [id])
   cartId    Int
   quantity  Int     @default(1)
+
+  @@map("cart-items")
 }

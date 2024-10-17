@@ -2,6 +2,8 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDTO, LoginUserDTO } from './DTO';
 import * as bcrypt from 'bcrypt';
@@ -62,16 +64,20 @@ export class AuthService {
         email: user.email,
       },
     });
-    const matchPassword = await bcrypt.compare(
+    const isPasswordValid = await bcrypt.compare(
       user.password,
       userExist.password,
     );
 
-    if (!userExist && !matchPassword) {
-      throw new ForbiddenException(
+    if (!userExist) {
+      throw new NotFoundException(
         'User does not exist, try a valid email or password',
       );
     }
+
+    if (!isPasswordValid)
+      throw new UnauthorizedException('Password does not macth');
+
     const payload = { sub: userExist.id, email: userExist.email };
 
     // Generate JWT token
