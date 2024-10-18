@@ -2,11 +2,33 @@
 <html>
   <head>
     <title>Welcome to Our App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        padding: 20px;
+        display: grid;
+        place-content: center;
+      }
+      h1 {
+        color: #2c3e50;
+      }
+      p {
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .signature {
+        margin-top: 20px;
+        font-style: italic;
+      }
+    </style>
   </head>
   <body>
     <h1>Welcome {{name}}!</h1>
     <p>Thank you for playing a big part in our community.</p>
     <p>We hope you enjoy using our services. You're located in {{state}}.</p>
-    <p>Regards,<br />{{app_name}} Team</p>
+    <p class="signature">Regards,<br />{{app_name}} Team</p>
+    <a href="http://localhost:3000">Go back to app</a>
   </body>
 </html>
