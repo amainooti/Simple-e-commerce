@@ -27,7 +27,7 @@ model Product {
   title       String
   user        User       @relation(fields: [userId], references: [id])
   category    String
-  description String
+  description String?
   price       Float
   userId      Int
   cartItems   CartItem[]

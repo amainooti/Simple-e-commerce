@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Amaino Oti",
+    "email": "amainooti@gmail.com",
+    "password": "password"
+  },
+
+  {
+    "title": "Sample Product",
+    "category": "Electronics",
+    "description": "A great electronic product.",
+    "price": 99.99
+  }
+]

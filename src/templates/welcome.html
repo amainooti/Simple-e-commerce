@@ -22,13 +22,35 @@
         margin-top: 20px;
         font-style: italic;
       }
+      .button-wrapper {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+      a {
+        text-decoration: none;
+        padding: 12px;
+        background-color: rgb(66, 83, 85);
+        color: white;
+      }
     </style>
   </head>
   <body>
     <h1>Welcome {{name}}!</h1>
-    <p>Thank you for playing a big part in our community.</p>
-    <p>We hope you enjoy using our services. You're located in {{state}}.</p>
-    <p class="signature">Regards,<br />{{app_name}} Team</p>
-    <a href="http://localhost:3000">Go back to app</a>
+    <p>Thank you for joining the family of shoppers</p>
+    <p>
+      To make the most out of our service kindly click on accept news letter.
+    </p>
+    <div class="button-wrapper">
+      <a href=""> Accept </a>
+      <a href="">Decline</a>
+    </div>
+
+    <p class="signature">
+      Regards,<br />
+      E-shopping Team
+    </p>
   </body>
 </html>

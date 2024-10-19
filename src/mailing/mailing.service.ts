@@ -28,8 +28,8 @@ export class MailingService {
   // Load email template from a file
   loadTemplate(templateName: string): string {
     const filePath = path.join(
-      __dirname,
-      '..',
+      process.cwd(),
+      'src',
       'templates',
       `${templateName}.html`,
     );

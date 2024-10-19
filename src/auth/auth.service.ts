@@ -10,12 +10,15 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
+import { MailingService } from '../mailing/mailing.service';
+import { sendMail } from '../mailing/types';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailingService,
   ) {}
 
   generateHash(password: string) {
@@ -46,6 +49,17 @@ export class AuthService {
       const message = 'User has been created successfully';
 
       delete newUser.password;
+
+      const mail: sendMail = {
+        recipient: [{ name: newUser.name, address: newUser.email }],
+        subject: 'Welcome aboard',
+        templateName: 'welcome', // Use a template file called welcome.html
+        placeholderReplacement: { name: newUser.name },
+      };
+
+      setTimeout(() => {
+        this.mailService.sendMail(mail);
+      }, 5000);
 
       return { message, newUser };
     } catch (error: unknown) {
