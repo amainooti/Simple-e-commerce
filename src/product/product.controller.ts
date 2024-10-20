@@ -12,7 +12,7 @@ import {
 import { ProductService } from './product.service';
 import { jwtAuthGuard } from '../auth/guard';
 import { CreateProductDTO } from './DTO';
-import { UpdateProductDTO } from './DTO/UpdateProductDTO';
+import { UpdateProductDTO } from './DTO';
 
 @Controller({
   version: '1',
