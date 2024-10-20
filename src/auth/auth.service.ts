@@ -2,6 +2,7 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -15,6 +16,8 @@ import { sendMail } from '../mailing/types';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
@@ -90,7 +93,7 @@ export class AuthService {
     }
 
     if (!isPasswordValid)
-      throw new UnauthorizedException('Password does not macth');
+      throw new UnauthorizedException('Password does not match');
 
     const payload = { sub: userExist.id, email: userExist.email };
 
@@ -106,5 +109,70 @@ export class AuthService {
       },
       token,
     };
+  }
+
+  // Forgot Password Functionality
+  async forgotPassword(emailObj: { email: string }) {
+    const email = emailObj.email;
+    const user = await this.prismaService.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    // Generate reset token (JWT)
+    const resetToken = this.jwtService.sign(
+      { userId: user.id, email: user.email },
+      { expiresIn: '1h' }, // Token valid for 1 hour
+    );
+
+    const resetPasswordUrl = `http://localhost:3000/reset-password?token=${resetToken}`;
+
+    // Send reset password email
+    const mail: sendMail = {
+      recipient: [{ name: user.name, address: user.email }],
+      subject: 'Password Reset',
+      templateName: 'reset-password', // Use a template file called reset-password.html
+      placeholderReplacement: {
+        name: user.name,
+        resetLink: resetPasswordUrl,
+        resetToken,
+      },
+    };
+
+    await this.mailService.sendMail(mail);
+
+    return {
+      message: 'Password reset link sent to your email address',
+    };
+  }
+
+  // Reset Password Functionality
+  async resetPassword(token: string, newPassword: string) {
+    try {
+      const payload = this.jwtService.verify(token); // Decode the token
+      const user = await this.prismaService.user.findUnique({
+        where: { id: payload.userId },
+      });
+
+      if (!user) {
+        throw new NotFoundException('Invalid token');
+      }
+
+      // Hash new password
+      const hashedPassword = this.generateHash(newPassword);
+
+      // Update user's password in the database
+      await this.prismaService.user.update({
+        where: { id: user.id },
+        data: { password: hashedPassword },
+      });
+
+      return { message: 'Password has been reset successfully' };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
   }
 }
