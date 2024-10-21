@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDTO, LoginUserDTO, ResetPasswordDTO } from './DTO';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller({
   path: 'auth',
@@ -24,8 +25,8 @@ export class AuthController {
   signIn(@Body() user: LoginUserDTO) {
     return this.authService.signIn(user);
   }
-  
-  @Throttle({ default: { limit: 1, ttl: 1000 } })
+
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   @Post('forgot-password')
   forgotPassword(@Body() email) {
     return this.authService.forgotPassword(email);
