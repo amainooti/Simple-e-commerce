@@ -6,12 +6,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import {
-  CreateUserDTO,
-  ForgotPasswordDTO,
-  LoginUserDTO,
-  ResetPasswordDTO,
-} from './DTO';
+import { CreateUserDTO, LoginUserDTO, ResetPasswordDTO } from './DTO';
 
 @Controller({
   path: 'auth',
