@@ -29,6 +29,8 @@ export class AuthController {
   signIn(@Body() user: LoginUserDTO) {
     return this.authService.signIn(user);
   }
+  
+  @Throttle({ default: { limit: 1, ttl: 1000 } })
   @Post('forgot-password')
   forgotPassword(@Body() email) {
     return this.authService.forgotPassword(email);
