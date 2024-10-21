@@ -44,12 +44,21 @@ model Cart {
 }
 
 model CartItem {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id])
+  id        Int        @id @default(autoincrement())
+  product   Product    @relation(fields: [productId], references: [id])
+  status    CartStatus @default(ACTIVE)
   productId Int
-  cart      Cart    @relation(fields: [cartId], references: [id])
+  cart      Cart       @relation(fields: [cartId], references: [id])
   cartId    Int
-  quantity  Int     @default(1)
+  quantity  Int        @default(1)
 
   @@map("cart-items")
+}
+
+enum CartStatus {
+  ACTIVE
+  ABANDONED
+  CHECKOUT_IN_PROGRESS
+  COMPLETED
+  MERGED
 }

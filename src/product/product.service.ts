@@ -36,12 +36,37 @@ export class ProductService {
     }
   }
 
-  async getAll() {
+  async getAll(value?: string) {
     try {
-      const product = await this.prismaService.product.findMany({});
+      const products = await this.prismaService.product.findMany({
+        where: value
+          ? {
+              OR: [
+                {
+                  title: {
+                    contains: value,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  description: {
+                    contains: value,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  category: {
+                    contains: value,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            }
+          : {},
+      });
 
-      if (!product) throw new NotFoundException('Products not found');
-      return product;
+      if (!products) throw new NotFoundException('Products not found');
+      return products;
     } catch (error) {
       throw error;
     }

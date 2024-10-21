@@ -12,6 +12,7 @@ import {
   UploadedFile,
   ParseFilePipe,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { jwtAuthGuard } from '../auth/guard';
@@ -26,6 +27,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  //TODO: Change the single file upload to multiple file upload
   @UseGuards(jwtAuthGuard)
   @UseInterceptors(FileInterceptor('image')) // Single file upload
   @Post()
@@ -53,8 +55,8 @@ export class ProductController {
   }
 
   @Get()
-  getAll() {
-    return this.productService.getAll();
+  getAll(@Query('product') product?: string) {
+    return this.productService.getAll(product);
   }
 
   @Patch(':id')

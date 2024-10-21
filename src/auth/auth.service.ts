@@ -130,6 +130,8 @@ export class AuthService {
 
     const resetPasswordUrl = `http://localhost:3000/reset-password?token=${resetToken}`;
 
+    this.logger.log('Trying to send token to mail');
+
     // Send reset password email
     const mail: sendMail = {
       recipient: [{ name: user.name, address: user.email }],
@@ -144,6 +146,8 @@ export class AuthService {
 
     await this.mailService.sendMail(mail);
 
+    this.logger.log('Successfully sent token to mail');
+
     return {
       message: 'Password reset link sent to your email address',
     };
@@ -152,7 +156,7 @@ export class AuthService {
   // Reset Password Functionality
   async resetPassword(token: string, newPassword: string) {
     try {
-      const payload = this.jwtService.verify(token); // Decode the token
+      const payload = this.jwtService.verify(token);
       const user = await this.prismaService.user.findUnique({
         where: { id: payload.userId },
       });
@@ -161,10 +165,8 @@ export class AuthService {
         throw new NotFoundException('Invalid token');
       }
 
-      // Hash new password
       const hashedPassword = this.generateHash(newPassword);
 
-      // Update user's password in the database
       await this.prismaService.user.update({
         where: { id: user.id },
         data: { password: hashedPassword },
