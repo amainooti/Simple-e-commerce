@@ -30,6 +30,7 @@ model Product {
   description String?
   price       Float
   userId      Int
+  imageUrl    String[]
   cartItems   CartItem[]
 
   @@map("product")

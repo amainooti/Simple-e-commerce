@@ -1,5 +1,14 @@
 import { Optional } from '@nestjs/common';
-import { IsNotEmpty, IsNumber, IsString, MinLength } from 'class-validator';
+import { Transform } from 'class-transformer';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class CreateProductDTO {
   @IsString()
@@ -20,6 +29,11 @@ export class CreateProductDTO {
   description?: string;
 
   @IsNumber()
-  @IsNotEmpty()
+  @Min(0)
+  @Transform(({ value }) => parseFloat(value))
   price: number;
+
+  @IsArray()
+  @IsOptional()
+  imageUrl?: string[];
 }

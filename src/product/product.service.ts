@@ -3,18 +3,21 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDTO } from './DTO';
 import { Validation } from './validation/Validation';
 import { UpdateProductDTO } from './DTO/UpdateProductDTO';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @Injectable()
 export class ProductService {
   readonly logger = new Logger(ProductService.name);
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private cloudinaryService: CloudinaryService,
+  ) {}
 
-  async getById({ productId, userId }: { productId: number; userId: number }) {
+  async getById(productId: number) {
     try {
       const product = await this.prismaService.product.findFirst({
         where: {
           id: productId,
-          userId,
         },
       });
 
@@ -26,15 +29,41 @@ export class ProductService {
       return { message: 'Successful', product };
     } catch (error) {
       this.logger.error(
-        `Error retrieving product with ID ${productId} for user ID ${userId}`,
+        `Error retrieving product with ID ${productId}`,
         error.stack,
       );
       throw new NotFoundException('Product not found or permission denied');
     }
   }
 
-  async createProduct(productDto: CreateProductDTO) {
+  async getAll() {
     try {
+      const product = await this.prismaService.product.findMany({});
+
+      if (!product) throw new NotFoundException('Products not found');
+      return product;
+    } catch (error) {
+      throw error;
+    }
+  }
+  async createProduct(
+    productDto: CreateProductDTO,
+    image: Express.Multer.File,
+  ) {
+    try {
+      const folder = `products/${productDto.category}`;
+      this.logger.log(
+        `Attempting to upload image to Cloudinary in folder: ${folder}`,
+      );
+
+      this.logger.log('Attempting to upload image to Cloudinary');
+      const cloudinaryResponse =
+        await this.cloudinaryService.uploadImage(image);
+      this.logger.log(
+        'Image uploaded successfully',
+        cloudinaryResponse.secure_url,
+      );
+
       const product = await this.prismaService.product.create({
         data: {
           title: productDto.title,
@@ -42,6 +71,7 @@ export class ProductService {
           description: productDto.description,
           price: productDto.price,
           userId: productDto.userId,
+          imageUrl: [cloudinaryResponse.secure_url],
         },
       });
 
