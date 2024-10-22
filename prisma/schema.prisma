@@ -36,11 +36,29 @@ model Product {
   @@map("product")
 }
 
+model Transaction {
+  id            Int           @id @default(autoincrement())
+  amount        Float
+  currency      String        @default("NGN")
+  status        PaymentStatus @default(PENDING)
+  reference     String        @unique
+  paystackRef   String?       @unique
+  cart          Cart          @relation(fields: [cartId], references: [id])
+  cartId        Int           @unique
+  metadata      Json?
+  paymentMethod String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("transactions")
+}
+
 model Cart {
-  id        Int        @id @default(autoincrement())
-  user      User       @relation(fields: [userId], references: [id])
-  userId    Int
-  cartItems CartItem[]
+  id          Int          @id @default(autoincrement())
+  user        User         @relation(fields: [userId], references: [id])
+  userId      Int
+  cartItems   CartItem[]
+  transaction Transaction?
 }
 
 model CartItem {
@@ -53,6 +71,13 @@ model CartItem {
   quantity  Int        @default(1)
 
   @@map("cart-items")
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 enum CartStatus {
