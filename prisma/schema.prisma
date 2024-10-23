@@ -44,7 +44,7 @@ model Transaction {
   reference     String        @unique
   paystackRef   String?       @unique
   cart          Cart          @relation(fields: [cartId], references: [id])
-  cartId        Int           @unique
+  cartId        Int
   metadata      Json?
   paymentMethod String?
   createdAt     DateTime      @default(now())
@@ -54,11 +54,11 @@ model Transaction {
 }
 
 model Cart {
-  id          Int          @id @default(autoincrement())
-  user        User         @relation(fields: [userId], references: [id])
+  id          Int           @id @default(autoincrement())
+  user        User          @relation(fields: [userId], references: [id])
   userId      Int
   cartItems   CartItem[]
-  transaction Transaction?
+  transaction Transaction[]
 }
 
 model CartItem {
