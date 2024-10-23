@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartStatus } from '@prisma/client';
+import { cartItem } from './DTO/cart-item';
 
 @Injectable()
 export class CartService {
@@ -76,10 +77,10 @@ export class CartService {
     });
   }
 
-  async getActiveCartItems(cartId: number) {
+  async getActiveCartItems(cart: cartItem) {
     return this.prismaService.cartItem.findMany({
       where: {
-        cartId,
+        cartId: cart.cartId,
         status: CartStatus.ACTIVE,
       },
     });

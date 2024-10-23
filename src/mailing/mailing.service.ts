@@ -29,7 +29,7 @@ export class MailingService {
   loadTemplate(templateName: string): string {
     const filePath = path.join(
       process.cwd(),
-      'src',
+      'dist',
       'templates',
       `${templateName}.html`,
     );

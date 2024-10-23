@@ -3,11 +3,13 @@ import {
   Controller,
   ParseIntPipe,
   Post,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { User } from '../auth/decorators';
+// import { User } from '../auth/decorators';
 import { jwtAuthGuard } from '../auth/guard';
+import { cartItem } from './DTO/cart-item';
 
 @Controller({
   version: '1',
@@ -17,31 +19,37 @@ export class CartController {
   constructor(private readonly cartService: CartService) {}
 
   @Post('add')
+  @UseGuards(jwtAuthGuard)
   async addToCart(
-    @User('id') userId: number,
     @Body('productId', ParseIntPipe) productId: number,
     @Body('quantity', ParseIntPipe) quantity: number = 1,
+    @Request() req,
   ) {
-    return this.cartService.addToCart(+userId, productId, quantity);
+    const userId = req.user.id;
+    return this.cartService.addToCart(userId, productId, quantity);
   }
 
+  @Post('start-checkout')
   @UseGuards(jwtAuthGuard)
   startCheckout(@Body('cartId') cartId: number) {
     return this.cartService.startCheckout(cartId);
   }
 
+  @Post('complete-checkout')
   @UseGuards(jwtAuthGuard)
   completeCheckout(@Body('cartId') cartId: number) {
     return this.cartService.completeCheckout(cartId);
   }
 
+  @Post('achived')
   @UseGuards(jwtAuthGuard)
   saveForLater(@Body('cartItemId') cartItemId: number) {
     return this.cartService.saveForLater(cartItemId);
   }
 
+  @Post('cart-items')
   @UseGuards(jwtAuthGuard)
-  getActiveCartItems(@Body() cartId: number) {
+  getActiveCartItems(@Body() cartId: cartItem) {
     return this.cartService.getActiveCartItems(cartId);
   }
 }
