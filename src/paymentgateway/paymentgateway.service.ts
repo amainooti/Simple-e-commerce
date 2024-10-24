@@ -88,7 +88,7 @@ export class PaymentgatewayService {
       const response = await axios.post(
         `${this.baseUrl}/transaction/initialize`,
         {
-          amount: amount * 100, // Convert to kobo
+          amount: amount * 100,
           email: cart.user.email,
           reference: transaction.reference,
           callback_url: `${process.env.APP_URL}/payment/verify`,

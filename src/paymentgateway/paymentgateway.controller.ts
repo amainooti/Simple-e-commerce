@@ -24,7 +24,6 @@ export class PaymentgatewayController {
   async initializePayment(@Request() req, @Body('cartId') cartId: number) {
     try {
       const userId = req.user.id;
-      console.log(userId);
       const payment = await this.paymentgatewayService.initializePayment(
         userId,
         cartId,
@@ -35,7 +34,7 @@ export class PaymentgatewayController {
         data: payment,
       };
     } catch (error) {
-      throw error; // Let NestJS handle HttpExceptions
+      throw error;
     }
   }
 
@@ -49,7 +48,7 @@ export class PaymentgatewayController {
         ...verificationResult,
       };
     } catch (error) {
-      throw error; // Let NestJS handle HttpExceptions
+      throw error;
     }
   }
 
@@ -63,7 +62,7 @@ export class PaymentgatewayController {
         data: { total },
       };
     } catch (error) {
-      throw error; // Let NestJS handle HttpExceptions
+      throw error;
     }
   }
 }
