@@ -1,85 +1,118 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# E-Commerce Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is an e-commerce backend API built with **NestJS** and **Prisma ORM**. It provides a range of functionalities for managing users, products, carts, and transactions, integrating with **Cloudinary** for image storage and **Paystack** as a payment gateway.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [API Endpoints](#api-endpoints)
+  - [User](#user)
+  - [Cart](#cart)
+  - [Product](#product)
+  - [Transaction/Payment](#transactionpayment)
+- [License](#license)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Technologies Used
 
-## Project setup
+- **NestJS**: For building and organizing the backend API.
+- **Prisma ORM**: For interacting with a PostgreSQL database.
+- **Cloudinary**: To handle image uploads and storage.
+- **Paystack**: For secure payment processing.
+- **JWT Authentication**: To secure user authentication.
 
-```bash
-$ npm install
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm
+- PostgreSQL database
+- Cloudinary and Paystack accounts for image storage and payment gateway, respectively.
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/username/e-commerce-backend.git
+   cd e-commerce-backend
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables (see the [Environment Variables](#environment-variables) section).
+
+4. Run database migrations:
+
+   ```bash
+   npx prisma migrate dev
+   ```
+
+5. Start the application:
+
+   ```bash
+   npm run start:dev
+   ```
+
+### Environment Variables
+
+To run this project, you’ll need to add the following environment variables to your `.env` file:
+
+```dotenv
+DATABASE_URL=your_postgresql_database_url
+JWT_SECRET=your_jwt_secret
+CLOUDINARY_URL=your_cloudinary_url
+PAYSTACK_SECRET_KEY=your_paystack_secret_key
 ```
 
-## Compile and run the project
+## API Endpoints
 
-```bash
-# development
-$ npm run start
+### User
 
-# watch mode
-$ npm run start:dev
+| Method | Endpoint       | Description         |
+| ------ | -------------- | ------------------- |
+| POST   | `/auth/signup` | Register a new user |
+| POST   | `/auth/login`  | Authenticate a user |
 
-# production mode
-$ npm run start:prod
-```
+### Cart
 
-## Run tests
+| Method | Endpoint                  | Description                       |
+| ------ | ------------------------- | --------------------------------- |
+| POST   | `/cart/add`               | Add product to the user's cart    |
+| POST   | `/cart/start-checkout`    | Begin checkout for the cart       |
+| POST   | `/cart/complete-checkout` | Complete the checkout process     |
+| POST   | `/cart/archived`          | Save a cart item for later        |
+| POST   | `/cart/cart-items`        | Retrieve active items in the cart |
 
-```bash
-# unit tests
-$ npm run test
+### Product
 
-# e2e tests
-$ npm run test:e2e
+| Method | Endpoint        | Description                                                        |
+| ------ | --------------- | ------------------------------------------------------------------ |
+| POST   | `/products`     | Create a new product with image upload                             |
+| GET    | `/products/:id` | Retrieve product by ID                                             |
+| GET    | `/products`     | Retrieve all products or search by title, description, or category |
+| PATCH  | `/products/:id` | Update a product                                                   |
+| DELETE | `/products/:id` | Delete a product                                                   |
 
-# test coverage
-$ npm run test:cov
-```
+### Transaction/Payment
 
-## Resources
+| Method | Endpoint                            | Description                           |
+| ------ | ----------------------------------- | ------------------------------------- |
+| POST   | `/paymentgateway/initialize`        | Initialize a payment                  |
+| GET    | `/paymentgateway/verify/:reference` | Verify a payment                      |
+| GET    | `/paymentgateway/cart-total`        | Calculate the total cost for the cart |
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License.
+
+## credit
+
+[Roadmap](https://roadmap.sh/projects/ecommerce-api)
