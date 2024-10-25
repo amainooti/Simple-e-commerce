@@ -7,7 +7,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
-// import { User } from '../auth/decorators';
 import { jwtAuthGuard } from '../auth/guard';
 import { cartItem } from './DTO/cart-item';
 
