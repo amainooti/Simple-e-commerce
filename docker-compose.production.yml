@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:123@prod-db:5432/nest
+      - NODE_ENV=production
+    depends_on:
+      - prod-db
+    networks:
+      - prod-network
+    
+  prod-db:
+    image: postgres:13
+    ports:
+      - 5436:5432 
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: nest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - prod-network
+
+networks:
+  prod-network:
+
+volumes:
+  postgres_data:
