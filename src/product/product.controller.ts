@@ -19,7 +19,9 @@ import { jwtAuthGuard } from '../auth/guard';
 import { CreateProductDTO } from './DTO';
 import { UpdateProductDTO } from './DTO';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Products')
 @Controller({
   version: '1',
   path: 'products',
@@ -29,6 +31,7 @@ export class ProductController {
 
   //TODO: Change the single file upload to multiple file upload
   @UseGuards(jwtAuthGuard)
+  @ApiBearerAuth()
   @UseInterceptors(FileInterceptor('image')) // Single file upload
   @Post()
   async create(
@@ -55,11 +58,17 @@ export class ProductController {
   }
 
   @Get()
+  @ApiQuery({
+    name: 'product',
+    required: false,
+    description: 'Product name to filter by (optional)',
+  })
   getAll(@Query('product') product?: string) {
     return this.productService.getAll(product);
   }
 
   @Patch(':id')
+  @ApiBearerAuth()
   update(
     @Param('id', ParseIntPipe) productId: number,
     @Body() dto: UpdateProductDTO,

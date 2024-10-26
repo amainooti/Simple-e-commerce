@@ -8,7 +8,9 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDTO, LoginUserDTO, ResetPasswordDTO } from './DTO';
 import { Throttle } from '@nestjs/throttler';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Authentication')
 @Controller({
   path: 'auth',
   version: '1',

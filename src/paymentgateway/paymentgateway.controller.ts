@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 import { PaymentgatewayService } from './paymentgateway.service';
 import { jwtAuthGuard } from '../auth/guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('Payment-gateway')
 @Controller({
   path: 'paymentgateway',
   version: '1',

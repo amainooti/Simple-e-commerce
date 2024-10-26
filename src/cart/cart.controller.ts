@@ -9,7 +9,10 @@ import {
 import { CartService } from './cart.service';
 import { jwtAuthGuard } from '../auth/guard';
 import { cartItem } from './DTO/cart-item';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('Cart')
 @Controller({
   version: '1',
   path: 'cart',
